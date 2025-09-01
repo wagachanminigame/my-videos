@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勇者スプライトアニメーション</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .animation-area {
+            background: #2c3e50;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-sprite {
+            width: 128px;
+            height: 128px;
+            background-image: url('hero_walk_spritesheet.png');
+            background-repeat: no-repeat;
+            background-size: 512px 512px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            transform: scale(2);
+            animation: walk 0.8s steps(4) infinite;
+        }
+
+        @keyframes walk {
+            0% { background-position: 0 -128px; }
+            25% { background-position: -128px -128px; }
+            50% { background-position: -256px -128px; }
+            75% { background-position: -384px -128px; }
+            100% { background-position: 0 -128px; }
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .speed-control {
+            margin: 20px 0;
+            color: white;
+        }
+
+        input[type="range"] {
+            width: 200px;
+            margin: 0 10px;
+        }
+
+        .info {
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .hero-sprite {
+                transform: scale(2);
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗡️ 勇者スプライトアニメーション</h1>
+        
+        <div class="animation-area">
+            <div class="hero-sprite" id="heroSprite"></div>
+        </div>
+        
+        <div class="controls">
+            <button onclick="toggleAnimation()">一時停止/再生</button>
+            <button onclick="resetAnimation()">リセット</button>
+        </div>
+        
+        <div class="speed-control">
+            <label>アニメーション速度:</label>
+            <input type="range" id="speedSlider" min="0.2" max="2" step="0.1" value="0.8" onchange="changeSpeed()">
+            <span id="speedValue">0.8s</span>
+        </div>
+        
+        <div class="info">
+            ピクセルアートの勇者が歩くアニメーションです。<br>
+            コントロールでアニメーションの再生/停止や速度調整ができます。
+        </div>
+    </div>
+
+    <script>
+        let isAnimating = true;
+        const heroSprite = document.getElementById('heroSprite');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+
+        function toggleAnimation() {
+            if (isAnimating) {
+                heroSprite.style.animationPlayState = 'paused';
+                isAnimating = false;
+            } else {
+                heroSprite.style.animationPlayState = 'running';
+                isAnimating = true;
+            }
+        }
+
+        function resetAnimation() {
+            heroSprite.style.animation = 'none';
+            setTimeout(() => {
+                heroSprite.style.animation = `walk ${speedSlider.value}s steps(4) infinite`;
+                heroSprite.style.animationPlayState = 'running';
+                isAnimating = true;
+            }, 10);
+        }
+
+        function changeSpeed() {
+            const speed = speedSlider.value;
+            speedValue.textContent = speed + 's';
+            heroSprite.style.animationDuration = speed + 's';
+        }
+
+        // 初期化
+        window.addEventListener('load', () => {
+            console.log('スプライトアニメーション読み込み完了');
+        });
+    </script>
+</body>
+</html>
+
